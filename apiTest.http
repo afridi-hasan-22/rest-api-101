@@ -1,0 +1,13 @@
+GET http://localhost:2000/health
+
+###
+
+POST http://localhost:2000
+Content-Type: application/json
+
+{
+    "name" : "Tamim",
+    "country" : "BD",
+    "rank" : 2
+}
+
