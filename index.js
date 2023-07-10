@@ -12,6 +12,46 @@ const server = express();
 
 server.use([morgan('dev'), cors(), express.json()]);
 
+
+server.patch('/:id', async (req,res)=> {
+    const id = req.params.id;
+    const data = await fs.readFile(dbPath);
+    const players = JSON.parse(data);
+    
+    const player = players.find(item => item.id === id);
+     
+    if(!player){
+        res.status(404).json({
+            message : 'Player not found'
+        })
+    }
+
+    player.name = req.body.name || player.name;
+    player.country = req.body.country || player.country;
+    player.rank = req.body.rank || player.rank;
+
+    await fs.writeFile(dbPath, JSON.stringify(players))
+    res.json(201).json(player)
+})
+
+
+server.get('/:id', async (req,res)=> {
+    const id = req.params.id;
+    const data = await fs.readFile(dbPath);
+    const players = JSON.parse(data);
+    
+    const player = players.find(item => item.id === id);
+     
+    if(!player){
+        res.status(404).json({
+            message : 'Player not found'
+        })
+    }
+
+    res.status(201).json(player)
+})
+
+
 server.get('/health', (req,res)=> {
     res.status(200).send('Success');
 });
@@ -32,7 +72,8 @@ server.post('/', async (req,res) => {
 
 server.get('/', async (req,res)=> {
     const data = await fs.readFile(dbPath);
-    
+    const players = JSON.parse(data);
+    res.status(201).json(players)
 })
 
 
